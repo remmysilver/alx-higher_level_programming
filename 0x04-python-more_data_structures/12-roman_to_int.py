@@ -2,30 +2,51 @@
 
 
 def roman_to_int(roman_string):
-    """Converts a roman numeral to an integer."""
-    if (not isinstance(roman_string, str) or
-            roman_string is None):
-        return (0)
+    if roman_string is not None and type(roman_string) == str:
+        rom_dict = {
+            'I': 1,
+            'V': 5,
+            'X': 10,
+            'L': 50,
+            'C': 100,
+            'D': 500,
+            'M': 1000
+        }
 
-    roman_dict = {
-            "I": 1,
-            "V": 5,
-            "X": 10,
-            "L": 50,
-            "C": 100,
-            "D": 500,
-            "M": 1000
-    }
-    num = 0
+        total = 0
+        prev = 1001
+        for c in roman_string:
+            if rom_dict[c] > prev:
+                total += rom_dict[c] - (prev * 2)
+            else:
+                total += rom_dict[c]
+            prev = rom_dict[c]
+        return total
+    return 0
 
-    for i in range(len(roman_string)):
-        if roman_dict.get(roman_string[i], 0) == 0:
-            return (0)
 
-        if (i != (len(roman_string) - 1) and
-                roman_dict[roman_string[i]] < roman_dict[roman_string[i + 1]]):
-                num += roman_dict[roman_string[i]] * -1
+if __name__ == '__main__':
+    """ Roman to Integer test file
+    """
+    roman_to_int = __import__('12-roman_to_int').roman_to_int
 
-        else:
-            num += roman_dict[roman_string[i]]
-    return (num)
+    roman_number = "X"
+    print("{} = {}".format(roman_number, roman_to_int(roman_number)))
+
+    roman_number = "VII"
+    print("{} = {}".format(roman_number, roman_to_int(roman_number)))
+
+    roman_number = "IX"
+    print("{} = {}".format(roman_number, roman_to_int(roman_number)))
+
+    roman_number = "LXXXVII"
+    print("{} = {}".format(roman_number, roman_to_int(roman_number)))
+
+    roman_number = "DCCVII"
+    print("{} = {}".format(roman_number, roman_to_int(roman_number)))
+
+    roman_number = "CM"
+    print("{} = {}".format(roman_number, roman_to_int(roman_number)))
+
+    roman_number = "XCIX"
+    print("{} = {}".format(roman_number, roman_to_int(roman_number)))
