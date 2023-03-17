@@ -1,24 +1,40 @@
 #!/usr/bin/python3
+"""Delete all State objects with a name containing the letter `a` from
+database hbtn_0e_6_usa.
 """
-Deletes all State objects with a name containing
-the letter a from the database hbtn_0e_6_usa.
-Usage: ./13-model_state_delete_a.py <mysql username> /
-                                    <mysql password> /
-                                    <database name>
-"""
-import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from model_state import State
+
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
+
+Base = declarative_base()
+
+
+class State(Base):
+    """Class representing the `states` table.
+
+    Columns:
+        id (int): /NOT NULL/AUTO_INCREMENT/PRIMARY_KEY/
+        name (string): /VARCHAR(128)/NOT NULL/
+    """
+    __tablename__ = 'states'
+
+    id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
+    name = Column(String(128), nullable=False)
 
 if __name__ == "__main__":
-    engine = create_engine("mysql+mysqldb://{}:{}@localhost/{}"
-                           .format(sys.argv[1], sys.argv[2], sys.argv[3]),
-                           pool_pre_ping=True)
+    import sys
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    engine = create_engine('mysql+mysqldb://'
+                           '{}:{}@localhost/{}'
+                           .format(sys.argv[1],
+                                   sys.argv[2],
+                                   sys.argv[3]))
     Session = sessionmaker(bind=engine)
     session = Session()
-
-    for state in session.query(State):
-        if "a" in state.name:
-            session.delete(state)
-    session.commit()v
+    for state in session.query(State).filter(State.name.like('%a%')):
+        session.delete(state)
+    session.commit()
