@@ -1,23 +1,37 @@
 #!/usr/bin/python3
-"""task 6 modele"""
 
 
 def find_peak(list_of_integers):
-    """Return a peak in a list of unsorted integers."""
-    if list_of_integers == []:
-        return None
+    """Find a peak in a list of integers.
 
-    size = len(list_of_integers)
-    if size == 1:
-        return list_of_integers[0]
-    elif size == 2:
-        return max(list_of_integers)
+    Example:
+        [1, 2, 4, 6, 3] -> 6
+        [4, 2, 1, 2, 3, 1] -> 3 # but 4 is also a peak
 
-    mid = int(size / 2)
-    peak = list_of_integers[mid]
-    if peak > list_of_integers[mid - 1] and peak > list_of_integers[mid + 1]:
-        return peak
-    elif peak < list_of_integers[mid - 1]:
-        return find_peak(list_of_integers[:mid])
-    else:
-        return find_peak(list_of_integers[mid + 1:])
+    Returns: integer that is the peak.
+    """
+    l = len(list_of_integers)
+    n = l // 2
+    v = 0
+    while v < l:
+        v += 1
+        if n == 0:
+            gtl = True
+        else:
+            gtl = False
+        if n == l - 1:
+            gtr = True
+        else:
+            gtr = False
+        if n > 0:
+            if list_of_integers[n - 1] < list_of_integers[n]:
+                gtl = True
+        if n < l - 1:
+            if list_of_integers[n] > list_of_integers[n + 1]:
+                gtr = True
+        if gtl and gtr:
+            return list_of_integers[n]
+        if not gtr:
+            n += (l - n) // 2
+        elif not gtl:
+            n -= n // 2
